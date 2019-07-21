@@ -18,18 +18,66 @@
     <!-- You may change the dimensions of this canvas -->
     <canvas id="myCanvas" width="750px" height="750px"></canvas>
 </body>
-<script>
-
+<script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript">
+  
     // setting up the canvas and one paper tool
     var canvas = document.getElementById('myCanvas');
     paper.setup(canvas);
     var tool = new paper.Tool();
+    console.log('You pressed the mouse!');
+ 
+    //var myPath = new paper.Path();
+    //myPath.strokeColor = 'black';
+    // This function is called whenever the user
+    // clicks the mouse in the view:
+    //tool.onMouseDown = function(event) {
+	    // Add a segment to the path at the position of the mouse:
+      //console.log(event.point);
+	    //socket.send(event.point.x + "," + event.point.y);
+    //}
+
 
     // getting the URL (you may want to use for Exercise 3)
     var url = window.location.href;
 
     // var socket = new WebSocket(
     //     'wss://<your url here>/ws/draw');
+    var socket = new WebSocket('wss://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/ws/draw');
+    
+    // triggered when receiving a message from the server
+    //socket.onmessage = function(recieveMessage) {
+      //console.log(recieveMessage["data"]);
+      //var data = recieveMessage["data"].split(",");
+      //myPath.add(new paper.Point(data[0], data[1]));
+    //}
+    
+    // notify console if socket closes unexpectedly
+    socket.onclose = function(e) {
+       console.error('Chat socket closed unexpectedly');
+    };
+  
+    var myPath;
+    tool.onMouseDown = function(event) {
+     socket.send("1");
+    }
+    tool.onMouseDrag = function(event) {
+     socket.send(event.point.x + "," + event.point.y);
+	   
+    }
+    
+    socket.onmessage = function(recieveMessage) {
+      var data = recieveMessage.data.split(",");
+      if (data.length == 1) {
+        console.log("down");
+	      myPath = new paper.Path();
+	      myPath.strokeColor = 'black';
+      } else {
+        var point = new paper.Point(data);
+        myPath.add(point);
+      }
+    }
+    
 
 
 </script>
