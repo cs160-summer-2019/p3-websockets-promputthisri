@@ -45,6 +45,7 @@
     //     'wss://<your url here>/ws/draw');
     var socket = new WebSocket('wss://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/ws/draw');
     
+    
     // triggered when receiving a message from the server
     //socket.onmessage = function(recieveMessage) {
       //console.log(recieveMessage["data"]);
@@ -59,26 +60,50 @@
   
     var myPath;
     tool.onMouseDown = function(event) {
-     socket.send("1");
+     var myUrl = window.location.href;
+     socket.send("0,1,2");
+     socket.send(myUrl);
     }
     tool.onMouseDrag = function(event) {
      socket.send(event.point.x + "," + event.point.y);
-	   
     }
+    
+    var tracker;
     
     socket.onmessage = function(recieveMessage) {
       var data = recieveMessage.data.split(",");
-      if (data.length == 1) {
+      if (data.length == 3) {
         console.log("down");
 	      myPath = new paper.Path();
-	      myPath.strokeColor = 'black';
+      } else if (data.length == 2) {
+        if (tracker == window.location.href) {
+          var point = new paper.Point(data);
+          myPath.add(point);
+        } if (window.location.href == "https://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/draw/?size=large/") {
+          console.log("hey");
+          var point = new paper.Point(data);
+          myPath.add(point);
+        }
+      } else if (data.length == 1) {
+        console.log(1);
+        if (data == "https://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/draw/?a/") {
+          console.log("red");
+          myPath.strokeColor = 'red';
+        } else if (data == "https://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/draw/?b/") {
+          console.log("blue");
+          myPath.strokeColor = 'blue';
+        } else if ("https://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/draw/?size=large/") {
+          console.log("black");
+          myPath.strokeColor = 'black';
+        } else {
+          console.log("black");
+          myPath.strokeColor = 'black';
+        }
+        tracker = data;
       } else {
-        var point = new paper.Point(data);
-        myPath.add(point);
+        console.log("error message data 73")
       }
     }
     
-
-
 </script>
 </html>
