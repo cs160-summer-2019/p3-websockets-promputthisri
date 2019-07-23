@@ -19,6 +19,7 @@
     <canvas id="myCanvas" width="750px" height="750px"></canvas>
 </body>
 <script type="text/javascript" src="js/paper.js"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/alexgibson/shake.js/master/shake.js"></script>
 <script type="text/javascript">
   
     // setting up the canvas and one paper tool
@@ -68,6 +69,38 @@
      socket.send(event.point.x + "," + event.point.y);
     }
     
+    var color = 0;
+  var Color = 'red';
+  //from qnimate.com
+  var shakeEvent = new Shake({threshol: 15});
+  shakeEvent.start();
+  window.addEventListener('shake', function() {
+    alert('SHAKING!! change color');
+    if (color == 0) {
+      Color = 'black';
+      color++;
+    } else if (color == 1) {
+      myPath.strokeColor = 'red';
+      color++;
+    } else if (color == 2) {
+      Color = 'blue';
+      color++;
+    } else if (color == 3) {
+      Color = 'green';
+      color++;
+    } else if (color == 4) {
+      Color = 'yellow';
+      color++;
+    } else if (color == 5) {
+      Color = 'purple';
+      color = 0;
+    }
+  }, false);
+  
+  if(!("ondevicemotion" in window)) {
+    alert("Not Supported");
+  }
+  
     var tracker;
     
     socket.onmessage = function(recieveMessage) {
@@ -92,11 +125,14 @@
         } else if (data == "https://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/draw/?b/") {
           console.log("blue");
           myPath.strokeColor = 'blue';
-        } else if ("https://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/draw/?size=large/") {
+        } else if (data == "https://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/draw/?size=large/") {
           console.log("black");
           myPath.strokeColor = 'black';
+        } else if (data == "https://p3-websockets-promputthisri-promputthisri499532.codeanyapp.com/draw/?c/") {
+          console.log(Color);
+          myPath.strokeColor = Color;
         } else {
-          console.log("black");
+          console.log('black');
           myPath.strokeColor = 'black';
         }
         tracker = data;
@@ -104,6 +140,8 @@
         console.log("error message data 73")
       }
     }
+    
+  
     
 </script>
 </html>
