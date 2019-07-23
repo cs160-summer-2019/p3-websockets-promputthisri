@@ -75,8 +75,47 @@
   var shakeEvent = new Shake({threshol: 15});
   shakeEvent.start();
   window.addEventListener('shake', function() {
-    alert('SHAKING!! change color');
-    if (color == 0) {
+  alert("clean the page!!");
+  location.reload();
+    //alert("tilting right change color")
+    //if (color == 0) {
+     // Color = 'black';
+      //color++;
+    //} else if (color == 1) {
+     // myPath.strokeColor = 'red';
+     // color++;
+    //} else if (color == 2) {
+     // Color = 'blue';
+     // color++;
+    //} else if (color == 3) {
+     // Color = 'green';
+     // color++;
+   // } else if (color == 4) {
+     // Color = 'yellow';
+     // color++;
+    //} else if (color == 5) {
+     // Color = 'purple';
+     // color = 0;
+    //}
+  //}, false);
+  
+  window.addEventListener("deviceorientation", handleOrientation, true);
+  function handleOrientation(event) {
+    // those angles are in degrees
+    var alpha = event.alpha;  
+    var beta = event.beta;
+    var gamma = event.gamma;
+
+    // JS math works in radians
+    var betaR = beta / 180 * Math.PI;
+    var gammaR = gamma / 180 * Math.PI;
+    var spinR = Math.atan2(Math.cos(betaR) * Math.sin(gammaR), Math.sin(betaR));
+
+    // convert back to degrees
+    var spin = spinR * 180 / Math.PI;
+    if (Math.sign(spin) > 10) {
+      alert('Tilting right!! change color');
+      if (color == 0) {
       Color = 'black';
       color++;
     } else if (color == 1) {
@@ -95,7 +134,10 @@
       Color = 'purple';
       color = 0;
     }
-  }, false);
+    } else if (Math.sign(spin) < -10) {
+      alert("tiling left!!");
+    }
+}
   
   if(!("ondevicemotion" in window)) {
     alert("Not Supported");
